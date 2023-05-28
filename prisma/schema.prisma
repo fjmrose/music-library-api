@@ -11,22 +11,22 @@ datasource db {
 }
 
 model Track {
-  id             Int        @id @default(autoincrement())
+  id                Int        @id @default(autoincrement())
 
-  created_at     DateTime   @default(now())
-  updated_at     DateTime   @default(now())
+  created_at        DateTime   @default(now())
+  updated_at        DateTime   @default(now())
 
-  title          String     @db.VarChar(60)
-  artist_id      Int
-  album_id       Int?
-  release_date   DateTime?
-  image          String?    
-  url            String     
-  host           Host       
+  title             String     @db.VarChar(60)
+  album_id          Int?
+  release_date      DateTime?
+  image             String?    
+  url               String     
+  host              Host       
   
-  artist         Artist     @relation(references: [id], fields: [artist_id])
-  album          Album?     @relation(references: [id], fields: [album_id])
-  genres         Genre[]      
+  artists           Artist[]   @relation("artist")
+  remix_artists     Artist[]   @relation("remix_artist")
+  album             Album?     @relation(references: [id], fields: [album_id])
+  genres            Genre[]      
 }
 
 model Mix {
@@ -40,11 +40,12 @@ model Mix {
 }
 
 model Artist {
-  id      Int       @id @default(autoincrement())
-  name    String    @db.VarChar(50)
+  id         Int         @id @default(autoincrement())
+  name       String      @db.VarChar(50)
 
-  tracks  Track[]
-  mixes   Mix[]
+  tracks     Track[]     @relation("artist")  
+  remixes    Track[]     @relation("remix_artist") 
+  mixes      Mix[]
 }
 
 model Album {
@@ -66,4 +67,32 @@ enum Host {
   BANDCAMP
   SOUNDCLOUD
   OTHER
+}
+
+
+model User {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  firstName String?
+  lastName  String?
+  email     String    @unique
+  role      String    @default("user")
+  picture   String?
+  reporter  Absence[] @relation("reporter")
+  requester Absence[] @relation("user")
+}
+
+model Absence {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  approved   Boolean  @default(false)
+  user       User     @relation("user", fields: [userId], references: [id])
+  userId     Int
+  reporter   User     @relation("reporter", fields: [reporterId], references: [id])
+  reporterId Int
+  from       DateTime
+  to         DateTime
+  notes      String?
 }
