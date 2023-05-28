@@ -33,32 +33,41 @@ model Track {
 model Mix {
   id           Int        @id @default(autoincrement())
 
-  title        String     @db.VarChar(100)
+  title        String     @db.VarChar(100) @unique
   artist_id    Int
-  host         Host
+  host         Host       @default(SOUNDCLOUD)
+  image        String?    
+  url          String 
 
   artist       Artist     @relation(references: [id], fields: [artist_id])
 }
 
 model Artist {
   id         Int         @id @default(autoincrement())
-  name       String      @db.VarChar(50)
+  name       String      @db.VarChar(50) @unique
 
   tracks     Track[]     @relation("artist")  
   remixes    Track[]     @relation("remix_artist") 
   mixes      Mix[]
+  albums     Album[]
 }
 
 model Album {
-  id        Int       @id @default(autoincrement())
-  name      String    @db.VarChar(50)
+  id           Int       @id @default(autoincrement())
 
-  tracks    Track[]
+  title        String    @db.VarChar(50)
+  host         Host      @default(BANDCAMP)
+  image        String?    
+  url          String 
+  artist_id    Int
+
+  tracks       Track[]
+  artist       Artist     @relation(references: [id], fields: [artist_id])
 }
 
 model Genre {
   id       Int      @id @default(autoincrement())
-  name     String   @db.VarChar(30)
+  name     String   @db.VarChar(30) @unique
 
   tracks   Track[]
 }
@@ -78,7 +87,3 @@ enum TrackType {
   RADIO_EDIT
   BOOTLEG
 }
-
-
-
-
