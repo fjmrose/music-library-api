@@ -17,6 +17,7 @@ model Track {
   updated_at        DateTime   @default(now())
 
   title             String     @db.VarChar(60)
+  track_type        TrackType  @default(ORIGINAL)
   album_id          Int?
   release_date      DateTime?
   image             String?    
@@ -69,30 +70,15 @@ enum Host {
   OTHER
 }
 
-
-model User {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  firstName String?
-  lastName  String?
-  email     String    @unique
-  role      String    @default("user")
-  picture   String?
-  reporter  Absence[] @relation("reporter")
-  requester Absence[] @relation("user")
+enum TrackType {
+  ORIGINAL
+  REMIX
+  EDIT
+  CLUB_MIX
+  RADIO_EDIT
+  BOOTLEG
 }
 
-model Absence {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  approved   Boolean  @default(false)
-  user       User     @relation("user", fields: [userId], references: [id])
-  userId     Int
-  reporter   User     @relation("reporter", fields: [reporterId], references: [id])
-  reporterId Int
-  from       DateTime
-  to         DateTime
-  notes      String?
-}
+
+
+
