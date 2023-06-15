@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import { ApolloServer } from 'apollo-server';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { typeDefs, resolvers } from './graphql/schema';
+import { typeDefs, resolvers } from './graphql/schema/schema';
 
 const schema = makeExecutableSchema({
     typeDefs, resolvers

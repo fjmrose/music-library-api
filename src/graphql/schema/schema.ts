@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { gql } from 'apollo-server';
 import { ApolloError } from 'apollo-server-errors';
 import { GraphQLScalarType, Kind } from 'graphql';
-import { generateDueDate } from '../util/helpers';
+import { generateDueDate } from '../../util/helpers';
 
 const prisma = new PrismaClient({});
 
